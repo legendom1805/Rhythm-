@@ -1,42 +1,56 @@
-package com.example.rhythm;
+package com.example.rhythm.recycler_view_categories;
+
+import static java.security.AccessController.getContext;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rhythm.R;
+import com.example.rhythm.account_activity;
+import com.example.rhythm.home_activity;
+import com.example.rhythm.login_activity;
+import com.example.rhythm.mymusic_activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class search_activity extends AppCompatActivity {
 
     FirebaseAuth auth;
     FirebaseUser user;
+    RecyclerView recyclerView;
     FirebaseFirestore fstore;
-    TextView emailtext,usernametext;
+    TextView emailtext, usernametext;
     String userId;
+    ArrayList<model> categoriesarr;
+    categories_adaptor categoriesAdaptor;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +58,30 @@ public class search_activity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
+
+
+        //Recycler view
+        recyclerView = findViewById(R.id.recyclerviewcontact);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        db = FirebaseFirestore.getInstance();
+        categoriesarr = new ArrayList<model>();
+        categoriesAdaptor = new categories_adaptor(this, categoriesarr);
+        recyclerView.setAdapter(categoriesAdaptor);
+        EventChangeListner();
+
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
 
+
+
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
 
-        View header=navigationView.getHeaderView(0);
+        View header = navigationView.getHeaderView(0);
 
-        emailtext = (TextView)header.findViewById(R.id.emailview2);
-        usernametext = (TextView)header.findViewById(R.id.usernameview);
+        emailtext = (TextView) header.findViewById(R.id.emailview2);
+        usernametext = (TextView) header.findViewById(R.id.usernameview);
         userId = auth.getCurrentUser().getUid();
         DocumentReference documentReference = fstore.collection("user").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -93,11 +122,9 @@ public class search_activity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
 
-                if(item.getItemId()==R.id.account)
-                {
+                if (item.getItemId() == R.id.account) {
                     startActivity(new Intent(getApplicationContext(), account_activity.class));
-                }
-                else if (item.getItemId()==R.id.logout) {
+                } else if (item.getItemId() == R.id.logout) {
                     FirebaseAuth.getInstance().signOut();
                     Intent logint = new Intent(search_activity.this, login_activity.class);
                     startActivity(logint);
@@ -122,17 +149,14 @@ public class search_activity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                if(item.getItemId() == R.id.home)
-                {
+                if (item.getItemId() == R.id.home) {
                     startActivity(new Intent(getApplicationContext(), home_activity.class));
                     return true;
-                }
-                else if (item.getItemId() == R.id.search) {
+                } else if (item.getItemId() == R.id.search) {
 
                     startActivity(new Intent(getApplicationContext(), search_activity.class));
                     return true;
-                }
-                else if (item.getItemId() == R.id.mymusic) {
+                } else if (item.getItemId() == R.id.mymusic) {
 
                     startActivity(new Intent(getApplicationContext(), mymusic_activity.class));
                     return true;
@@ -144,14 +168,37 @@ public class search_activity extends AppCompatActivity {
         });
 
         user = auth.getCurrentUser();
-        if (user == null)
-        {
+        if (user == null) {
             Intent logint = new Intent(search_activity.this, login_activity.class);
             startActivity(logint);
             finish();
         }
 
 
+    }
 
+    private void EventChangeListner() {
+        db.collection("category")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+
+                        if (error != null) {
+
+                            Log.e("Firestore error", error.getMessage());
+                            return;
+
+                        }
+
+                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                categoriesarr.add(dc.getDocument().toObject(model.class));
+                            }
+
+                            categoriesAdaptor.notifyDataSetChanged();
+                        }
+
+                    }
+                });
     }
 }

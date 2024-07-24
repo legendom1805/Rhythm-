@@ -19,7 +19,7 @@
             android:name=".mymusic_activity"
             android:exported="false" />
         <activity
-            android:name=".search_activity"
+            android:name=".recycler_view_categories.search_activity"
             android:exported="false" />
         <activity
             android:name=".signup_activity"
