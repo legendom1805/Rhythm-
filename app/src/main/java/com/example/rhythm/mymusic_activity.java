@@ -1,6 +1,9 @@
 package com.example.rhythm;
 
+import static android.app.ProgressDialog.show;
+
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,6 +15,7 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -34,6 +38,9 @@ import androidx.core.view.GravityCompat;
 import androidx.customview.widget.Openable;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -49,6 +56,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +94,8 @@ public class mymusic_activity extends AppCompatActivity implements AdapterView.O
                     if (activityResult.getResultCode() == RESULT_OK && activityResult.getData() != null) {
 
                         audioUri = data.getData();
+                        String fileName = getFileNAme(audioUri);
+                        textviewimg.setText(fileName);
                         mediaMetadataRetriever.setDataSource(getApplicationContext(), audioUri);
                         art = mediaMetadataRetriever.getEmbeddedPicture();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
@@ -298,6 +308,54 @@ public class mymusic_activity extends AppCompatActivity implements AdapterView.O
         }
         return result;
     }
+
+    public void uploadFileTofirebase(View v){
+        if(textviewimg.equals("No file Selected")){
+            Toast.makeText(this,"Please select an image",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            if(muploadtask != null && muploadtask.isInProgress()){
+
+                Toast.makeText(this,"Song upload is in progress!",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                uploadfiles();
+            }
+        }
+    }
+
+    private void uploadfiles() {
+
+        if(audioUri != null){
+            Toast.makeText(this,"Uploading...! Please wait",Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.VISIBLE);
+            final StorageReference storageReference = mStoragef.child(System.currentTimeMillis()+"."+getfileextension(audioUri));
+            muploadtask = storageReference.putFile(audioUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+
+                        }
+                    });
+                }
+            });
+        }
+
+
+
+    }
+
+    private String getfileextension(Uri audioUri){
+
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(audioUri));
+
+    }
+
+
 }
 
 
