@@ -1,10 +1,7 @@
-package com.example.rhythm.recycler_view_categories;
-
-import static java.security.AccessController.getContext;
+package com.example.rhythm;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,28 +14,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rhythm.R;
-import com.example.rhythm.account_activity;
-import com.example.rhythm.home_activity;
-import com.example.rhythm.login_activity;
-import com.example.rhythm.mymusic_activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
 
 public class search_activity extends AppCompatActivity {
 
@@ -48,32 +35,15 @@ public class search_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext, usernametext;
     String userId;
-    ArrayList<model> categoriesarr;
-    categories_adaptor categoriesAdaptor;
     FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home);
-
-
-
-        //Recycler view
-        recyclerView = findViewById(R.id.recyclerviewcontact);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        db = FirebaseFirestore.getInstance();
-        categoriesarr = new ArrayList<model>();
-        categoriesAdaptor = new categories_adaptor(this, categoriesarr);
-        recyclerView.setAdapter(categoriesAdaptor);
-        EventChangeListner();
-
+        setContentView(R.layout.activity_search);
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
-
-
-
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
@@ -177,28 +147,5 @@ public class search_activity extends AppCompatActivity {
 
     }
 
-    private void EventChangeListner() {
-        db.collection("category")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
 
-                        if (error != null) {
-
-                            Log.e("Firestore error", error.getMessage());
-                            return;
-
-                        }
-
-                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                categoriesarr.add(dc.getDocument().toObject(model.class));
-                            }
-
-                            categoriesAdaptor.notifyDataSetChanged();
-                        }
-
-                    }
-                });
-    }
 }

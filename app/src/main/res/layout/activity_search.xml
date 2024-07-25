@@ -5,13 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".recycler_view_categories.search_activity">
+    tools:context=".search_activity"
+    android:background="@color/gery">
 
     <FrameLayout
         android:id="@+id/mainfragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#2B2D30"
+        android:background="@color/gery"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -19,44 +20,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <ScrollView
-            android:layout_width="388dp"
-            android:layout_height="605dp"
-            android:layout_margin="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.478"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.571">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:padding="5dp"
-                    android:text="Categories"
-                    android:textColor="@color/yellow"
-                    android:textSize="20dp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerviewcontact"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-
-            </LinearLayout>
-
-        </ScrollView>
-
 
     </FrameLayout>
+    
+    
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -69,7 +36,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-    <include layout="@layout/activity_navigation_drawer"/>
+   <include layout="@layout/activity_navigation_drawer"/>
 
 
 

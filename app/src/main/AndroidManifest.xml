@@ -13,13 +13,19 @@
         android:theme="@style/Theme.Rhythm"
         tools:targetApi="31">
         <activity
+            android:name=".mymusic.internal_activity"
+            android:exported="false" />
+        <activity
+            android:name=".mymusic.uplaod_activity"
+            android:exported="false" />
+        <activity
             android:name=".account_activity"
             android:exported="false" />
         <activity
             android:name=".mymusic_activity"
             android:exported="false" />
         <activity
-            android:name=".recycler_view_categories.search_activity"
+            android:name=".search_activity"
             android:exported="false" />
         <activity
             android:name=".signup_activity"
