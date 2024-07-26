@@ -2,28 +2,38 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search_activity"
-    android:background="@color/gery">
+    android:background="@color/gery"
+    tools:context=".search_activity">
 
-    <FrameLayout
-        android:id="@+id/mainfragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/gery"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+    <include layout="@layout/activity_navigation_drawer" />
 
 
-    </FrameLayout>
-    
-    
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="100dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:padding="5dp"
+                android:text="Categories"
+                android:textColor="@color/yellow"
+                android:textSize="20dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewcontact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,9 +46,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-   <include layout="@layout/activity_navigation_drawer"/>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

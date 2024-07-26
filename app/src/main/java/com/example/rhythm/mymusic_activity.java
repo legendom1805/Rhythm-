@@ -61,61 +61,61 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class mymusic_activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class mymusic_activity extends AppCompatActivity  {
 
     FirebaseAuth auth;
     FirebaseUser user;
     FirebaseFirestore fstore;
     TextView emailtext, usernametext;
     String userId;
-    TextView textviewimg;
-    ProgressBar progressBar;
-    Uri audioUri;
-    StorageReference mStoragef;
-    StorageTask muploadtask;
-    DatabaseReference referencesongs;
-    String songsCategory;
-    MediaMetadataRetriever mediaMetadataRetriever;
-    byte[] art;
-    String title1, artist1, album_art = "", duration1;
-    TextView title, artist, album, duration, dataa;
-    ImageView albumart;
-
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-
-                    int result = activityResult.getResultCode();
-                    Intent data = activityResult.getData();
-
-                    if (activityResult.getResultCode() == RESULT_OK && activityResult.getData() != null) {
-
-                        audioUri = data.getData();
-                        String fileName = getFileNAme(audioUri);
-                        textviewimg.setText(fileName);
-                        mediaMetadataRetriever.setDataSource(getApplicationContext(), audioUri);
-                        art = mediaMetadataRetriever.getEmbeddedPicture();
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
-                        albumart.setImageBitmap(bitmap);
-                        album.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
-                        artist.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
-                        dataa.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE));
-                        duration.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-                        title.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
-
-                        artist1 = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-                        title1 = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                        duration1 = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-                    }
-
-                }
-
-
-            });
+//    TextView textviewimg;
+//    ProgressBar progressBar;
+//    Uri audioUri;
+//    StorageReference mStoragef;
+//    StorageTask muploadtask;
+//    DatabaseReference referencesongs;
+//    String songsCategory;
+//    MediaMetadataRetriever mediaMetadataRetriever;
+//    byte[] art;
+//    String title1, artist1, album_art = "", duration1;
+//    TextView title, artist, album, duration, dataa;
+//    ImageView albumart;
+//
+//    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            new ActivityResultCallback<ActivityResult>() {
+//
+//                @Override
+//                public void onActivityResult(ActivityResult activityResult) {
+//
+//                    int result = activityResult.getResultCode();
+//                    Intent data = activityResult.getData();
+//
+//                    if (activityResult.getResultCode() == RESULT_OK && activityResult.getData() != null) {
+//
+//                        audioUri = data.getData();
+//                        String fileName = getFileNAme(audioUri);
+//                        textviewimg.setText(fileName);
+//                        mediaMetadataRetriever.setDataSource(getApplicationContext(), audioUri);
+//                        art = mediaMetadataRetriever.getEmbeddedPicture();
+//                        Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
+//                        albumart.setImageBitmap(bitmap);
+//                        album.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+//                        artist.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+//                        dataa.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE));
+//                        duration.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+//                        title.setText(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
+//
+//                        artist1 = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+//                        title1 = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+//                        duration1 = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//
+//                    }
+//
+//                }
+//
+//
+//            });
 
 
     @Override
@@ -123,38 +123,38 @@ public class mymusic_activity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mymusic);
-
-
-        textviewimg = findViewById(R.id.textsongfileselected);
-        progressBar = findViewById(R.id.progressbar);
-        title = findViewById(R.id.title);
-        artist = findViewById(R.id.artist);
-        duration = findViewById(R.id.duration);
-        album = findViewById(R.id.album);
-        dataa = findViewById(R.id.dataa);
-        albumart = findViewById(R.id.imageView);
-
-        mediaMetadataRetriever = new MediaMetadataRetriever();
-        referencesongs = FirebaseDatabase.getInstance().getReference().child("songs");
-        mStoragef = FirebaseStorage.getInstance().getReference().child("songs");
-
-        Spinner spinner = findViewById(R.id.spinner);
-
-        spinner.setOnItemSelectedListener(this);
-
-        List<String> categories = new ArrayList<>();
-
-
-        categories.add("Hindi Songs");
-        categories.add("Punjabi Songs");
-        categories.add("Western Songs");
-        categories.add("Kpop Songs");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-
-
+//
+//
+//        textviewimg = findViewById(R.id.textsongfileselected);
+//        progressBar = findViewById(R.id.progressbar);
+//        title = findViewById(R.id.title);
+//        artist = findViewById(R.id.artist);
+//        duration = findViewById(R.id.duration);
+//        album = findViewById(R.id.album);
+//        dataa = findViewById(R.id.dataa);
+//        albumart = findViewById(R.id.imageView);
+//
+//        mediaMetadataRetriever = new MediaMetadataRetriever();
+//        referencesongs = FirebaseDatabase.getInstance().getReference().child("songs");
+//        mStoragef = FirebaseStorage.getInstance().getReference().child("songs");
+//
+//        Spinner spinner = findViewById(R.id.spinner);
+//
+//        spinner.setOnItemSelectedListener(this);
+//
+//        List<String> categories = new ArrayList<>();
+//
+//
+//        categories.add("Hindi Songs");
+//        categories.add("Punjabi Songs");
+//        categories.add("Western Songs");
+//        categories.add("Kpop Songs");
+//
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(dataAdapter);
+//
+//
         // Navigation drawer
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
@@ -261,101 +261,101 @@ public class mymusic_activity extends AppCompatActivity implements AdapterView.O
     }
 
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-        songsCategory = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(this, "Selected:" + songsCategory, Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
-    public void openAudioFiles(View v) {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.setType("audio/");
-        activityResultLauncher.launch(i);
-
-    }
-
-    @SuppressLint("Range")
-    private String getFileNAme(Uri uri) {
-
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            }
-            finally {
-                cursor.close();
-            }
-        }
-
-        if(result == null){
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if(cut != -1)
-            {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
-    }
-
-    public void uploadFileTofirebase(View v){
-        if(textviewimg.equals("No file Selected")){
-            Toast.makeText(this,"Please select an image",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            if(muploadtask != null && muploadtask.isInProgress()){
-
-                Toast.makeText(this,"Song upload is in progress!",Toast.LENGTH_SHORT).show();
-            }
-            else{
-                uploadfiles();
-            }
-        }
-    }
-
-    private void uploadfiles() {
-
-        if(audioUri != null){
-            Toast.makeText(this,"Uploading...! Please wait",Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.VISIBLE);
-            final StorageReference storageReference = mStoragef.child(System.currentTimeMillis()+"."+getfileextension(audioUri));
-            muploadtask = storageReference.putFile(audioUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-
-                        }
-                    });
-                }
-            });
-        }
-
-
-
-    }
-
-    private String getfileextension(Uri audioUri){
-
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(audioUri));
-
-    }
-
-
+//    @Override
+//    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//        songsCategory = adapterView.getItemAtPosition(i).toString();
+//        Toast.makeText(this, "Selected:" + songsCategory, Toast.LENGTH_SHORT).show();
+//
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//    }
+//
+//    public void openAudioFiles(View v) {
+//        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+//        i.setType("audio/");
+//        activityResultLauncher.launch(i);
+//
+//    }
+//
+//    @SuppressLint("Range")
+//    private String getFileNAme(Uri uri) {
+//
+//        String result = null;
+//        if (uri.getScheme().equals("content")) {
+//            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+//
+//            try {
+//                if (cursor != null && cursor.moveToFirst()) {
+//                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+//                }
+//            }
+//            finally {
+//                cursor.close();
+//            }
+//        }
+//
+//        if(result == null){
+//            result = uri.getPath();
+//            int cut = result.lastIndexOf('/');
+//            if(cut != -1)
+//            {
+//                result = result.substring(cut + 1);
+//            }
+//        }
+//        return result;
+//    }
+//
+//    public void uploadFileTofirebase(View v){
+//        if(textviewimg.equals("No file Selected")){
+//            Toast.makeText(this,"Please select an image",Toast.LENGTH_SHORT).show();
+//        }
+//        else{
+//            if(muploadtask != null && muploadtask.isInProgress()){
+//
+//                Toast.makeText(this,"Song upload is in progress!",Toast.LENGTH_SHORT).show();
+//            }
+//            else{
+//                uploadfiles();
+//            }
+//        }
+//    }
+//
+//    private void uploadfiles() {
+//
+//        if(audioUri != null){
+//            Toast.makeText(this,"Uploading...! Please wait",Toast.LENGTH_SHORT).show();
+//            progressBar.setVisibility(View.VISIBLE);
+//            final StorageReference storageReference = mStoragef.child(System.currentTimeMillis()+"."+getfileextension(audioUri));
+//            muploadtask = storageReference.putFile(audioUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                        @Override
+//                        public void onSuccess(Uri uri) {
+//
+//                        }
+//                    });
+//                }
+//            });
+//        }
+//
+//
+//
+//    }
+//
+//    private String getfileextension(Uri audioUri){
+//
+//        ContentResolver contentResolver = getContentResolver();
+//        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+//        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(audioUri));
+//
+//    }
+//
+//
 }
 
 
