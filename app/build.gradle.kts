@@ -54,4 +54,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.firebase.database.v2100)
+    implementation("androidx.media3:media3-exoplayer:1.4.0")
+    implementation("androidx.media3:media3-exoplayer-dash:1.4.0")
+    implementation("androidx.media3:media3-ui:1.4.0")
 }

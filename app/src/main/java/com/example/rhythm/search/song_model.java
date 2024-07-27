@@ -4,8 +4,17 @@ public class song_model {
 
     String id;
     String title;
+    String subtitle;
     String url;
     String coverurl;
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
 
     public song_model(){}
 

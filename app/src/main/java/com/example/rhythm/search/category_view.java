@@ -54,7 +54,7 @@ public class category_view extends AppCompatActivity {
     public void setUpsongslistrecyclerview() {
         if (category != null && category.songs != null) {
             RecyclerView recyclerView = findViewById(R.id.songs_list_recyclerview);
-            songslistadapter songslistadapter = new songslistadapter(category.songs);
+            songslistadapter songslistadapter = new songslistadapter(this,category.songs);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
             recyclerView.setAdapter(songslistadapter);
