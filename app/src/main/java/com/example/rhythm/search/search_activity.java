@@ -1,7 +1,6 @@
-package com.example.rhythm;
+package com.example.rhythm.search;
 
-import static java.security.AccessController.getContext;
-
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +19,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rhythm.R;
+import com.example.rhythm.account_activity;
+import com.example.rhythm.home_activity;
+import com.example.rhythm.login_activity;
+import com.example.rhythm.mymusic_activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -31,9 +35,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class search_activity extends AppCompatActivity {
 
@@ -43,9 +49,6 @@ public class search_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext, usernametext;
     String userId;
-    FirebaseFirestore db;
-    ArrayList<model> categoriesarr;
-    categories_adaptor categoriesAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +58,9 @@ public class search_activity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerviewcontact);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        db = FirebaseFirestore.getInstance();
-        categoriesarr = new ArrayList<model>();
-        categoriesAdaptor = new categories_adaptor(this, categoriesarr);
-        recyclerView.setAdapter(categoriesAdaptor);
-        EventChangeListner();
+
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
 
@@ -163,30 +162,32 @@ public class search_activity extends AppCompatActivity {
         }
 
 
+        EventChangeListner();
+
+
     }
 
     private void EventChangeListner() {
-        db.collection("category")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
 
-                        if (error != null) {
-
-                            Log.e("Firestore error", error.getMessage());
-                            return;
-
-                        }
-
-                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                categoriesarr.add(dc.getDocument().toObject(model.class));
-                            }
-
-                            categoriesAdaptor.notifyDataSetChanged();
-                        }
+        FirebaseFirestore.getInstance().collection("category")
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<category_model> categoriesarr = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        category_model categoryModel = document.toObject(category_model.class);
+                        categoriesarr.add(categoryModel);
+                        SetupCategoryRecyclerView(categoriesarr);
 
                     }
-                });
+
+        });
+    }
+
+    public void SetupCategoryRecyclerView(List<category_model> categorylist){
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerviewcontact);
+        categories_adapter categoriesAdapter = new categories_adapter(this, (ArrayList<category_model>) categorylist);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setAdapter(categoriesAdapter);
+
     }
 }
