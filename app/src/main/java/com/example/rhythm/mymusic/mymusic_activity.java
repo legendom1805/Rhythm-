@@ -1,4 +1,6 @@
-package com.example.rhythm.search;
+package com.example.rhythm.mymusic;
+
+import static android.app.ProgressDialog.show;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rhythm.R;
 import com.example.rhythm.account_activity;
 import com.example.rhythm.home.home_activity;
 import com.example.rhythm.login_activity;
-import com.example.rhythm.mymusic.mymusic_activity;
+import com.example.rhythm.search.search_activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -32,12 +32,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class search_activity extends AppCompatActivity {
+public class mymusic_activity extends AppCompatActivity {
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -45,18 +41,17 @@ public class search_activity extends AppCompatActivity {
     TextView emailtext, usernametext;
     String userId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_mymusic);
+
+
+        // Navigation drawer
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
-
-
-
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
 
         View header = navigationView.getHeaderView(0);
@@ -73,7 +68,6 @@ public class search_activity extends AppCompatActivity {
 
             }
         });
-
         //Navigation Drawer
         DrawerLayout drawerLayout;
         //NavigationView navigationView;
@@ -108,7 +102,7 @@ public class search_activity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), account_activity.class));
                 } else if (item.getItemId() == R.id.logout) {
                     FirebaseAuth.getInstance().signOut();
-                    Intent logint = new Intent(search_activity.this, login_activity.class);
+                    Intent logint = new Intent(mymusic_activity.this, login_activity.class);
                     startActivity(logint);
                     finish();
                 }
@@ -122,10 +116,11 @@ public class search_activity extends AppCompatActivity {
 
         });
 
+
         //Bottom navigation
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setSelectedItemId(R.id.mymusic);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -151,38 +146,12 @@ public class search_activity extends AppCompatActivity {
 
         user = auth.getCurrentUser();
         if (user == null) {
-            Intent logint = new Intent(search_activity.this, login_activity.class);
+            Intent logint = new Intent(mymusic_activity.this, login_activity.class);
             startActivity(logint);
             finish();
         }
 
 
-        EventChangeListner();
-
-
-    }
-
-    private void EventChangeListner() {
-
-        FirebaseFirestore.getInstance().collection("category")
-                .get().addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<category_model> categoriesarr = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        category_model categoryModel = document.toObject(category_model.class);
-                        categoriesarr.add(categoryModel);
-                        SetupCategoryRecyclerView(categoriesarr);
-
-                    }
-
-        });
-    }
-
-    public void SetupCategoryRecyclerView(List<category_model> categorylist){
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerviewcontact);
-        categories_adapter categoriesAdapter = new categories_adapter(this, (ArrayList<category_model>) categorylist);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setAdapter(categoriesAdapter);
-
     }
 }
+

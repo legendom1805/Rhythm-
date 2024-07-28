@@ -1,9 +1,8 @@
-package com.example.rhythm.search;
+package com.example.rhythm.home;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.RoundedCorner;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,20 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.rhythm.R;
 import com.example.rhythm.myexoplayer;
 import com.example.rhythm.player_activity;
+import com.example.rhythm.search.song_model;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class songslistadapter extends RecyclerView.Adapter<songslistadapter.ViewHolder> {
+public class sectionsonglistadapter extends RecyclerView.Adapter<sectionsonglistadapter.ViewHolder> {
 
     List<String> songIdList;
     Context context;
-    public songslistadapter(Context context,List<String> songarr) {
+    public sectionsonglistadapter(Context context, List<String> songarr) {
         this.songIdList = songarr;
         this.context = context;
 
@@ -39,7 +37,7 @@ public class songslistadapter extends RecyclerView.Adapter<songslistadapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.song_list_recycler_view, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.section_songlist_recycler_row, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -92,9 +90,9 @@ public class songslistadapter extends RecyclerView.Adapter<songslistadapter.View
 
         public ViewHolder(View itemView) {
             super(itemView);
-            songname = itemView.findViewById(R.id.song_title_text_view);
-            songsubtitle = itemView.findViewById(R.id.song_subtitle_text_view);
-            songimg = itemView.findViewById(R.id.song_img_view);
+            songname = itemView.findViewById(R.id.section_song_cover_title);
+            songsubtitle = itemView.findViewById(R.id.section_song_cover_subtitle);
+            songimg = itemView.findViewById(R.id.section_song_cover_img);
 
 
 

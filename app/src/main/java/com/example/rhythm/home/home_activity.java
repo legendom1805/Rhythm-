@@ -1,4 +1,4 @@
-package com.example.rhythm;
+package com.example.rhythm.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rhythm.R;
+import com.example.rhythm.account_activity;
+import com.example.rhythm.login_activity;
+import com.example.rhythm.mymusic.mymusic_activity;
+import com.example.rhythm.search.categories_adapter;
+import com.example.rhythm.search.category_model;
 import com.example.rhythm.search.search_activity;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -27,6 +36,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class home_activity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -153,6 +166,39 @@ public class home_activity extends AppCompatActivity {
 
 
         }
+        EventChangeListner();
 
     }
+
+    private void EventChangeListner() {
+
+        FirebaseFirestore.getInstance().collection("category")
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<category_model> categoriesarr = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        category_model categoryModel = document.toObject(category_model.class);
+                        categoriesarr.add(categoryModel);
+                        SetupCategoryRecyclerView(categoriesarr);
+
+                    }
+
+                });
+    }
+    //categories
+    public void SetupCategoryRecyclerView(List<category_model> categorylist){
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerviewcontact);
+        categories_adapter categoriesAdapter = new categories_adapter(this, (ArrayList<category_model>) categorylist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
+        recyclerView.setAdapter(categoriesAdapter);
+
+    }
+
+    //sections
+    public void SetUpSection(){
+        FirebaseFirestore.getInstance().collection("sections")
+                .document("section_1")
+                .get().addOnSuccessListener()
+    }
+
 }

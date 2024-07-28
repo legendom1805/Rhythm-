@@ -18,17 +18,12 @@
         <activity
             android:name=".search.category_view"
             android:exported="false" />
-        <activity
-            android:name=".mymusic.internal_activity"
-            android:exported="false" />
-        <activity
-            android:name=".mymusic.uplaod_activity"
-            android:exported="false" />
+
         <activity
             android:name=".account_activity"
             android:exported="false" />
         <activity
-            android:name=".mymusic_activity"
+            android:name=".mymusic.mymusic_activity"
             android:exported="false" />
         <activity
             android:name=".search.search_activity"
@@ -37,7 +32,7 @@
             android:name=".signup_activity"
             android:exported="false" />
         <activity
-            android:name=".home_activity"
+            android:name=".home.home_activity"
             android:exported="false" />
         <activity
             android:name=".login_activity"

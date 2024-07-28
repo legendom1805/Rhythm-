@@ -2,11 +2,11 @@ package com.example.rhythm.search;
 
 public class song_model {
 
-    String id;
-    String title;
-    String subtitle;
-    String url;
-    String coverurl;
+    public String id;
+    public String title;
+    public String subtitle;
+    public String url;
+    public String coverurl;
 
     public String getSubtitle() {
         return subtitle;

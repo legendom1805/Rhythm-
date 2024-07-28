@@ -1,6 +1,7 @@
 package com.example.rhythm;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
@@ -20,8 +22,15 @@ public class player_activity extends AppCompatActivity {
 
     ExoPlayer exoPlayer;
     TextView songTitle,songSubTitile;
-    ImageView songimg;
+    ImageView songimg,playergif;
     PlayerView playerView;
+    Player.Listener playerlistner = new Player.Listener() {
+        @Override
+        public void onIsPlayingChanged(boolean isPlaying) {
+            Player.Listener.super.onIsPlayingChanged(isPlaying);
+            showgif(isPlaying);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,7 @@ public class player_activity extends AppCompatActivity {
         songSubTitile = findViewById(R.id.song_subtitle_text_player);
         songimg = findViewById(R.id.song_cover_image_player);
         playerView = findViewById(R.id.player_view);
+        playergif = findViewById(R.id.song_cover_gif_player);
 
         song_model currentSong = myexoplayer.currentsong;
         if (currentSong != null) {
@@ -42,13 +52,28 @@ public class player_activity extends AppCompatActivity {
             Glide.with(songimg).load(currentSong.getCoverurl())
                     .circleCrop()
                     .into(songimg);
+            Glide.with(playergif).load(R.drawable.pngif)
+                    .circleCrop()
+                    .into(playergif);
 
             exoPlayer = new myexoplayer().getInstance();
+            playerView.showController();
             playerView.setPlayer(exoPlayer);
+            exoPlayer.addListener(playerlistner);
 
 
 
         }
+
+
+    }
+
+    public void showgif(Boolean show){
+
+        if(show)
+            playergif.setVisibility(View.VISIBLE);
+        else
+            playergif.setVisibility(View.INVISIBLE);
 
 
     }
