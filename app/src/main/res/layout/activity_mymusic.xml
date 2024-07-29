@@ -1,41 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mymusic.mymusic_activity">
+    android:background="@color/gery"
+    tools:context=".search.search_activity">
 
-    <FrameLayout
-        android:id="@+id/mainfragment"
-        android:layout_width="match_parent"
+
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerlayout"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/gery"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        tools:openDrawer="start">
 
 
-    </FrameLayout>
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/header_layout"
+            app:itemIconSize="40dp"
+            app:menu="@menu/navigation_drawer_menu" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/app_bar"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textinputtitle"
+                android:layout_width="310dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="76dp"
+                android:background="@color/white"
+                android:hint="Enter Song Name"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textinputsubtitle"
+                android:layout_width="310dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:hint="Enter Subtitle / Artist"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/textinputtitle"
+                app:layout_constraintStart_toStartOf="@+id/textinputtitle"
+                app:layout_constraintTop_toBottomOf="@+id/textinputtitle" />
+
+            <Button
+                android:id="@+id/uploadButton"
+                android:layout_width="232dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="28dp"
+                android:background="@color/yellow"
+                android:text="Upload New Song"
+                app:layout_constraintEnd_toEndOf="@+id/textinputsubtitle"
+                app:layout_constraintStart_toStartOf="@+id/textinputsubtitle"
+                app:layout_constraintTop_toBottomOf="@+id/textinputsubtitle" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="44dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/uploadButton" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="97dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/gradientcard1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-
-    <include layout="@layout/activity_navigation_drawer"/>
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

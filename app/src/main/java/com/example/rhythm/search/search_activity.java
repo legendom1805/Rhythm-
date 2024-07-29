@@ -97,7 +97,7 @@ public class search_activity extends AppCompatActivity {
         drawernavtoggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawerLayout.open();
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

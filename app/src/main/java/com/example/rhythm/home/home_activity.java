@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.example.rhythm.login_activity;
 import com.example.rhythm.mymusic.mymusic_activity;
 import com.example.rhythm.search.categories_adapter;
 import com.example.rhythm.search.category_model;
+import com.example.rhythm.search.category_view;
 import com.example.rhythm.search.search_activity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,6 +49,7 @@ public class home_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext,usernametext;
     String userId;
+    TextView sectiontitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +170,11 @@ public class home_activity extends AppCompatActivity {
 
         }
         EventChangeListner();
+        //Section1
+         RelativeLayout section1layout = findViewById(R.id.section_1_main_layout);
+         TextView sectitle = findViewById(R.id.section1title);
+         RecyclerView sectionrecyclerview = findViewById(R.id.section1recyclerview);
+         SetUpSection("section_1", section1layout,sectitle,sectionrecyclerview);
 
     }
 
@@ -195,10 +203,30 @@ public class home_activity extends AppCompatActivity {
     }
 
     //sections
-    public void SetUpSection(){
-        FirebaseFirestore.getInstance().collection("sections")
-                .document("section_1")
-                .get().addOnSuccessListener()
-    }
+    public void SetUpSection(String id, RelativeLayout mainlayout,TextView titleView,RecyclerView recyclerView){
+       FirebaseFirestore.getInstance().collection("sections").document(id)
+               .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                   @Override
+                   public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+                       category_model section = documentSnapshot.toObject(category_model.class);
+                       if(section != null){
+                           mainlayout.setVisibility(View.VISIBLE);
+                           titleView.setText(section.getName());
+                           recyclerView.setLayoutManager(new LinearLayoutManager(home_activity.this,RecyclerView.HORIZONTAL,false));
+                           sectionsonglistadapter sectionsonglistadapter = new sectionsonglistadapter(home_activity.this,section.getSongs());
+                           recyclerView.setAdapter(sectionsonglistadapter);
+                           mainlayout.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   Intent intent = new Intent(home_activity.this, category_view.class);
+                                   intent.putExtra("category_model",section);
+                                   startActivity(intent);
+                               }
+                           });
+
+                       }
+                   }
+               });
+    }
 }

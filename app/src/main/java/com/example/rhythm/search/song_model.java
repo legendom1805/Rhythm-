@@ -8,6 +8,16 @@ public class song_model {
     public String url;
     public String coverurl;
 
+    public song_model(String id, String title, String url, String coverurl, String subtitle) {
+        this.id = id;
+        this.title = title;
+        this.url = url;
+        this.coverurl = coverurl;
+        this.subtitle = subtitle;
+    }
+
+    public song_model(){}
+
     public String getSubtitle() {
         return subtitle;
     }
@@ -15,8 +25,6 @@ public class song_model {
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
-
-    public song_model(){}
 
     public String getId() {
         return id;

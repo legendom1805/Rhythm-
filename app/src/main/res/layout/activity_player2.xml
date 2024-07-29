@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="40dp"
+    android:paddingBottom="16dp"
+    tools:context=".player_activity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:text="Now Playing"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/song_cover_image_player"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_gravity="center" />
+
+
+    <TextView
+        android:id="@+id/song_title_text_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        tools:text="Song name" />
+
+    <TextView
+        android:id="@+id/song_subtitle_text_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        tools:text="Album" />
+
+    <ImageView
+        android:id="@+id/song_cover_gif_player"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:visibility="invisible"
+        android:scaleType="fitXY"
+        android:layout_gravity="center" />
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:visibility="visible"
+        app:auto_show="true"
+        app:hide_on_touch="false"
+        app:show_timeout="0" />
+
+
+</LinearLayout>

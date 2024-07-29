@@ -46,7 +46,13 @@ public class category_view extends AppCompatActivity {
         }
 
         backbtn = findViewById(R.id.back_btn);
-        backbtn.setOnClickListener(view -> startActivity(new Intent(category_view.this, search_activity.class)));
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
         setUpsongslistrecyclerview();
     }
