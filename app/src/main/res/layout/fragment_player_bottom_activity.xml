@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:padding="15dp"
+    tools:context=".player_bottom_activity">
+
+
+    <ImageView
+        android:id="@+id/song_cover_image_player_bottom"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/song_title_text_player_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:text="Song name" />
+
+        <TextView
+            android:id="@+id/song_subtitle_text_player_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            tools:text="Album" />
+    </LinearLayout>
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view_bottom"
+        android:layout_width="216dp"
+        android:layout_height="41dp"
+        android:visibility="visible"
+        app:auto_show="true"
+        app:hide_on_touch="false"
+        app:show_timeout="0" />
+
+
+</LinearLayout>

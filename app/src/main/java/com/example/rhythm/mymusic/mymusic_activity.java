@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -57,7 +58,7 @@ public class mymusic_activity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private upload_song_recycler_view_adapter songAdapter;
     private List<song_model> songList;
-    private TextInputEditText txttitle,txtsubtitle;
+    private TextInputEditText txttitle, txtsubtitle;
     String texttitle, textsubtitle;
     FirebaseAuth auth;
     FirebaseUser user;
@@ -73,7 +74,7 @@ public class mymusic_activity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     songUri = result.getData().getData();
-                    uploadSong();
+                    showInputDialog();
                 }
             }
     );
@@ -83,99 +84,69 @@ public class mymusic_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mymusic);
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        NavigationView navigationView = findViewById(R.id.navigationView);
 
         View header = navigationView.getHeaderView(0);
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
 
-        emailtext = (TextView) header.findViewById(R.id.emailview2);
-        usernametext = (TextView) header.findViewById(R.id.usernameview);
+        emailtext = header.findViewById(R.id.emailview2);
+        usernametext = header.findViewById(R.id.usernameview);
         userId = auth.getCurrentUser().getUid();
         DocumentReference documentReference = fstore.collection("user").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                emailtext.setText(documentSnapshot.getString("Email"));
-                usernametext.setText(documentSnapshot.getString("Username"));
-
+                if (documentSnapshot != null) {
+                    emailtext.setText(documentSnapshot.getString("Email"));
+                    usernametext.setText(documentSnapshot.getString("Username"));
+                }
             }
         });
 
-        //Navigation Drawer
-        DrawerLayout drawerLayout;
-        //NavigationView navigationView;
-        Toolbar toolbar;
-        ImageButton drawernavtoggle;
-        ImageButton acctoggle;
-
-        drawerLayout = findViewById(R.id.drawerlayout);
-        toolbar = findViewById(R.id.toolbar);
-        drawernavtoggle = findViewById(R.id.drawernavtoggle);
-        acctoggle = findViewById(R.id.accounttogglle);
+        // Navigation Drawer
+        DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        ImageButton drawernavtoggle = findViewById(R.id.drawernavtoggle);
+        ImageButton acctoggle = findViewById(R.id.accounttogglle);
         setSupportActionBar(toolbar);
 
-        acctoggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        acctoggle.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), account_activity.class)));
+
+        drawernavtoggle.setOnClickListener(view -> drawerLayout.openDrawer(GravityCompat.START));
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.account) {
                 startActivity(new Intent(getApplicationContext(), account_activity.class));
+            } else if (item.getItemId() == R.id.logout) {
+                FirebaseAuth.getInstance().signOut();
+                Intent logint = new Intent(mymusic_activity.this, login_activity.class);
+                startActivity(logint);
+                finish();
             }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
         });
 
-        drawernavtoggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
+        // Bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.mymusic);
 
-                if (item.getItemId() == R.id.account) {
-                    startActivity(new Intent(getApplicationContext(), account_activity.class));
-                } else if (item.getItemId() == R.id.logout) {
-                    FirebaseAuth.getInstance().signOut();
-                    Intent logint = new Intent(mymusic_activity.this, login_activity.class);
-                    startActivity(logint);
-                    finish();
-                }
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-
-
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.home) {
+                startActivity(new Intent(getApplicationContext(), home_activity.class));
+                return true;
+            } else if (item.getItemId() == R.id.search) {
+                startActivity(new Intent(getApplicationContext(), search_activity.class));
+                return true;
+            } else if (item.getItemId() == R.id.mymusic) {
+                startActivity(new Intent(getApplicationContext(), mymusic_activity.class));
                 return true;
             }
 
-
-        });
-
-        //Bottom navigation
-        BottomNavigationView bottomNavigationView;
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.mymusic);
-
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                if (item.getItemId() == R.id.home) {
-                    startActivity(new Intent(getApplicationContext(), home_activity.class));
-                    return true;
-                } else if (item.getItemId() == R.id.search) {
-
-                    startActivity(new Intent(getApplicationContext(), search_activity.class));
-                    return true;
-                } else if (item.getItemId() == R.id.mymusic) {
-
-                    startActivity(new Intent(getApplicationContext(), mymusic_activity.class));
-                    return true;
-                }
-
-
-                return false;
-            }
+            return false;
         });
 
         user = auth.getCurrentUser();
@@ -191,25 +162,8 @@ public class mymusic_activity extends AppCompatActivity {
         uploadButton = findViewById(R.id.uploadButton);
         txttitle = findViewById(R.id.textinputtitle);
         txtsubtitle = findViewById(R.id.textinputsubtitle);
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                texttitle = String.valueOf(txttitle.getText());
-                textsubtitle = String.valueOf(txtsubtitle.getText());
-
-                if (TextUtils.isEmpty(texttitle)) {
-                    Toast.makeText(mymusic_activity.this, "Enter Song Name", Toast.LENGTH_SHORT).show();
-
-                }
-
-                if (TextUtils.isEmpty(textsubtitle)) {
-                    Toast.makeText(mymusic_activity.this, "Enter Song Subtitle or Artist", Toast.LENGTH_SHORT).show();
-
-                }
-                openFileChooser();
-            }
-        });
+        uploadButton.setOnClickListener(view -> openFileChooser());
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -226,31 +180,55 @@ public class mymusic_activity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
+    private void showInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Song Details");
+
+        View viewInflated = getLayoutInflater().inflate(R.layout.dialog_song_details, null);
+        final TextInputEditText inputTitle = viewInflated.findViewById(R.id.textinputtitle);
+        final TextInputEditText inputSubtitle = viewInflated.findViewById(R.id.textinputsubtitle);
+
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            texttitle = inputTitle.getText().toString();
+            textsubtitle = inputSubtitle.getText().toString();
+
+            if (TextUtils.isEmpty(texttitle)) {
+                Toast.makeText(mymusic_activity.this, "Enter Song Name", Toast.LENGTH_SHORT).show();
+            } else if (TextUtils.isEmpty(textsubtitle)) {
+                Toast.makeText(mymusic_activity.this, "Enter Song Subtitle or Artist", Toast.LENGTH_SHORT).show();
+            } else {
+                uploadSong();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
     private void uploadSong() {
         if (songUri != null) {
-
-
             StorageReference storageRef = storage.getReference().child("songs/" + System.currentTimeMillis() + ".mp3");
             String finalTitle = texttitle;
             String finalArtist = textsubtitle;
             storageRef.putFile(songUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            String songUrl = uri.toString();
-                            String songcover = "https://firebasestorage.googleapis.com/v0/b/rhythm-80f02.appspot.com/o/sectionimg%2Fvecteezy_music-party-disco-flyer-with-exceptional-glow-of-lights_.jpg?alt=media&token=dc24e5bc-1c4d-4034-842b-dce44de7762d";
-                            saveSongMetadata(finalTitle, finalArtist, songUrl, songcover);
-                        });
-                    })
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String songUrl = uri.toString();
+                        String songcover = "https://firebasestorage.googleapis.com/v0/b/rhythm-80f02.appspot.com/o/sectionimg%2Fvecteezy_music-party-disco-flyer-with-exceptional-glow-of-lights_.jpg?alt=media&token=dc24e5bc-1c4d-4034-842b-dce44de7762d";
+                        saveSongMetadata(finalTitle, finalArtist, songUrl, songcover);
+                    }))
                     .addOnFailureListener(e -> Toast.makeText(mymusic_activity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void saveSongMetadata(String title, String subtitle, String url,String coverurl) {
+    private void saveSongMetadata(String title, String subtitle, String url, String coverurl) {
         DatabaseReference dbRef = database.getReference("songs");
         String id = dbRef.push().getKey();
-        song_model song = new song_model(id,title,url,coverurl,subtitle);
+        song_model song = new song_model(id, title, url, coverurl, subtitle);
         dbRef.child(id).setValue(song)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(mymusic_activity.this, "Song uploaded successfully", Toast.LENGTH_SHORT).show();

@@ -10,7 +10,7 @@ import com.example.rhythm.search.song_model;
 public class myexoplayer {
 
     static ExoPlayer exoPlayer = null;
-    static song_model currentsong = null;
+    public static song_model currentsong = null;
 
     public ExoPlayer getInstance()
     {

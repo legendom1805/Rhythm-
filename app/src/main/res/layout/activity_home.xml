@@ -20,10 +20,6 @@
         tools:openDrawer="start">
 
 
-
-
-
-
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="match_parent"
@@ -37,186 +33,202 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <include layout="@layout/app_bar"/>
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/app_bar" />
 
 
-
-        <ScrollView
-            android:id="@+id/scrollView2"
-            android:layout_width="match_parent"
-            android:layout_height="632dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.393">
-
-
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <ScrollView
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
+                android:layout_height="632dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.393">
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:padding="5dp"
-                    android:text="Categories"
-                    android:textColor="@color/yellow"
-                    android:textSize="20dp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerviewcontact"
+                <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:id="@+id/section_1_main_layout">
 
                     <TextView
-                        android:id="@+id/section1title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
                         android:padding="5dp"
+                        android:text="Categories"
                         android:textColor="@color/yellow"
-                        android:textSize="20dp"
-                        tools:text="Trending" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_alignParentEnd="true"
-                        android:src="@drawable/baseline_arrow_forward_24" />
-
+                        android:textSize="20dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/section1recyclerview"
+                        android:id="@+id/recyclerviewcontact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/section1title"
                         android:layout_weight="1" />
 
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:id="@+id/section_2_main_layout">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
 
-                    <TextView
-                        android:id="@+id/section2title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="20dp"
-                        tools:text="Trending" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_alignParentEnd="true"
-                        android:src="@drawable/baseline_arrow_forward_24" />
-
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/section2recyclerview"
+                    <RelativeLayout
+                        android:id="@+id/section_1_main_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/section2title"
-                        android:layout_weight="1" />
+                        android:visibility="gone">
 
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:id="@+id/section_3_main_layout">
+                        <TextView
+                            android:id="@+id/section1title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:textColor="@color/yellow"
+                            android:textSize="20dp"
+                            tools:text="Trending" />
 
-                    <TextView
-                        android:id="@+id/section3title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="20dp"
-                        tools:text="Trending" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_alignParentEnd="true"
-                        android:src="@drawable/baseline_arrow_forward_24" />
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/baseline_arrow_forward_24" />
 
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/section3recyclerview"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/section1recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/section1title"
+                            android:layout_weight="1" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/section_2_main_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/section3title"
-                        android:layout_weight="1" />
+                        android:visibility="gone">
 
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:id="@+id/section_4_main_layout">
+                        <TextView
+                            android:id="@+id/section2title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:textColor="@color/yellow"
+                            android:textSize="20dp"
+                            tools:text="Trending" />
 
-                    <TextView
-                        android:id="@+id/section4title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="20dp"
-                        tools:text="Trending" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_alignParentEnd="true"
-                        android:src="@drawable/baseline_arrow_forward_24" />
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/baseline_arrow_forward_24" />
 
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/section4recyclerview"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/section2recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/section2title"
+                            android:layout_weight="1" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/section_3_main_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/section4title"
-                        android:layout_weight="1" />
+                        android:visibility="gone">
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/section3title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:textColor="@color/yellow"
+                            android:textSize="20dp"
+                            tools:text="Trending" />
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/baseline_arrow_forward_24" />
 
 
-            </LinearLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/section3recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/section3title"
+                            android:layout_weight="1" />
 
-        </ScrollView>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/section_4_main_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/section4title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:textColor="@color/yellow"
+                            android:textSize="20dp"
+                            tools:text="Trending" />
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/baseline_arrow_forward_24" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/section4recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/section4title"
+                            android:layout_weight="1" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>
+    <!--<fragment
+        android:id="@+id/player_fragment"
+        android:name="com.example.rhythm.player_bottom_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />-->
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"

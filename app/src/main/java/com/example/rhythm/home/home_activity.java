@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,17 +17,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.rhythm.R;
 import com.example.rhythm.account_activity;
 import com.example.rhythm.login_activity;
+import com.example.rhythm.myexoplayer;
 import com.example.rhythm.mymusic.mymusic_activity;
+import com.example.rhythm.player_bottom_activity;
 import com.example.rhythm.search.categories_adapter;
 import com.example.rhythm.search.category_model;
 import com.example.rhythm.search.category_view;
 import com.example.rhythm.search.search_activity;
+import com.example.rhythm.search.song_model;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -49,7 +58,6 @@ public class home_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext,usernametext;
     String userId;
-    TextView sectiontitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,10 @@ public class home_activity extends AppCompatActivity {
 
             }
         });
+
+
+
+
 
         //Navigation Drawer
         DrawerLayout drawerLayout;
@@ -124,6 +136,15 @@ public class home_activity extends AppCompatActivity {
 
 
         });
+
+//        if (savedInstanceState == null) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            player_bottom_activity playerFragment = new player_bottom_activity();
+//            fragmentTransaction.replace(R.id.player_fragment, playerFragment);
+//            fragmentTransaction.commit();
+//        }
+
 
         //Bottom navigation
         BottomNavigationView bottomNavigationView;
