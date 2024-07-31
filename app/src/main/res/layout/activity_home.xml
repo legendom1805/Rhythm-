@@ -218,15 +218,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>
-    <!--<fragment
+    <include
         android:id="@+id/player_fragment"
-        android:name="com.example.rhythm.player_bottom_activity"
+        layout="@layout/fragment_player_bottom_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />-->
+        />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

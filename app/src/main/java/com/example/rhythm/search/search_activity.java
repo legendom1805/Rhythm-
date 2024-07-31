@@ -5,28 +5,37 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.rhythm.R;
 import com.example.rhythm.account_activity;
 import com.example.rhythm.home.home_activity;
 import com.example.rhythm.login_activity;
+import com.example.rhythm.myexoplayer;
 import com.example.rhythm.mymusic.mymusic_activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -44,6 +53,15 @@ public class search_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext, usernametext;
     String userId;
+    ExoPlayer exoPlayer;
+    TextView songTitle, songSubTitile;
+    ImageView songimg;
+    PlayerView playerView;
+    SearchView searchView;
+    RecyclerView searchResultsRecyclerView;
+    songslistadapter songsAdapter;
+    List<String> songList = new ArrayList<>();
+    CollectionReference songsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +70,37 @@ public class search_activity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
+        songsRef = fstore.collection("songs");
 
+        // Search
+        searchView = findViewById(R.id.search_view);
+        searchResultsRecyclerView = findViewById(R.id.search_results_recyclerview);
 
+        searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        songsAdapter = new songslistadapter(search_activity.this, songList);
+        searchResultsRecyclerView.setAdapter(songsAdapter);
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchSongs(query);
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchSongs(newText);
+                return false;
+            }
+        });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        // Navigation Drawer
+        NavigationView navigationView = findViewById(R.id.navigationView);
 
         View header = navigationView.getHeaderView(0);
 
-        emailtext = (TextView) header.findViewById(R.id.emailview2);
-        usernametext = (TextView) header.findViewById(R.id.usernameview);
+        emailtext = header.findViewById(R.id.emailview2);
+        usernametext = header.findViewById(R.id.usernameview);
         userId = auth.getCurrentUser().getUid();
         DocumentReference documentReference = fstore.collection("user").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -70,21 +108,13 @@ public class search_activity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 emailtext.setText(documentSnapshot.getString("Email"));
                 usernametext.setText(documentSnapshot.getString("Username"));
-
             }
         });
 
-        //Navigation Drawer
-        DrawerLayout drawerLayout;
-        //NavigationView navigationView;
-        Toolbar toolbar;
-        ImageButton drawernavtoggle;
-        ImageButton acctoggle;
-
-        drawerLayout = findViewById(R.id.drawerlayout);
-        toolbar = findViewById(R.id.toolbar);
-        drawernavtoggle = findViewById(R.id.drawernavtoggle);
-        acctoggle = findViewById(R.id.accounttogglle);
+        DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        ImageButton drawernavtoggle = findViewById(R.id.drawernavtoggle);
+        ImageButton acctoggle = findViewById(R.id.accounttogglle);
         setSupportActionBar(toolbar);
 
         acctoggle.setOnClickListener(new View.OnClickListener() {
@@ -100,10 +130,10 @@ public class search_activity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-
                 if (item.getItemId() == R.id.account) {
                     startActivity(new Intent(getApplicationContext(), account_activity.class));
                 } else if (item.getItemId() == R.id.logout) {
@@ -114,37 +144,45 @@ public class search_activity extends AppCompatActivity {
                 }
 
                 drawerLayout.closeDrawer(GravityCompat.START);
-
-
                 return true;
             }
-
-
         });
 
-        //Bottom navigation
-        BottomNavigationView bottomNavigationView;
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        songTitle = findViewById(R.id.song_title_text_player_bottom);
+        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
+        songimg = findViewById(R.id.song_cover_image_player_bottom);
+        playerView = findViewById(R.id.player_view_bottom);
+
+        song_model currentSong = myexoplayer.currentsong;
+        if (currentSong != null) {
+            songTitle.setText(currentSong.getTitle());
+            songSubTitile.setText(currentSong.getSubtitle());
+            Glide.with(songimg).load(currentSong.getCoverurl())
+                    .circleCrop()
+                    .into(songimg);
+
+            exoPlayer = new myexoplayer().getInstance();
+            playerView.showController();
+            playerView.setPlayer(exoPlayer);
+        }
+
+        // Bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.search);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
                 if (item.getItemId() == R.id.home) {
                     startActivity(new Intent(getApplicationContext(), home_activity.class));
                     return true;
                 } else if (item.getItemId() == R.id.search) {
-
                     startActivity(new Intent(getApplicationContext(), search_activity.class));
                     return true;
                 } else if (item.getItemId() == R.id.mymusic) {
-
                     startActivity(new Intent(getApplicationContext(), mymusic_activity.class));
                     return true;
                 }
-
-
                 return false;
             }
         });
@@ -156,14 +194,10 @@ public class search_activity extends AppCompatActivity {
             finish();
         }
 
-
-        EventChangeListner();
-
-
+        EventChangeListener();
     }
 
-    private void EventChangeListner() {
-
+    private void EventChangeListener() {
         FirebaseFirestore.getInstance().collection("category")
                 .get().addOnSuccessListener(queryDocumentSnapshots -> {
                     List<category_model> categoriesarr = new ArrayList<>();
@@ -171,18 +205,38 @@ public class search_activity extends AppCompatActivity {
                         category_model categoryModel = document.toObject(category_model.class);
                         categoriesarr.add(categoryModel);
                         SetupCategoryRecyclerView(categoriesarr);
-
                     }
-
-        });
+                });
     }
 
-    public void SetupCategoryRecyclerView(List<category_model> categorylist){
-
+    public void SetupCategoryRecyclerView(List<category_model> categorylist) {
         RecyclerView recyclerView = findViewById(R.id.recyclerviewcontact);
         categories_adapter categoriesAdapter = new categories_adapter(this, (ArrayList<category_model>) categorylist);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(categoriesAdapter);
+    }
 
+    private void searchSongs(String query) {
+        if (query.isEmpty()) {
+            songList.clear();
+            songsAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        songsRef.whereGreaterThanOrEqualTo("title_lowercase", query.toLowerCase())
+                .whereLessThanOrEqualTo("title_lowercase", query.toLowerCase() + '\uf8ff')
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        songList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String song_id = document.getId();
+                            songList.add(song_id);
+                        }
+                        songsAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(search_activity.this, "Error getting documents: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

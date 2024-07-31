@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,7 +28,6 @@ import com.example.rhythm.account_activity;
 import com.example.rhythm.login_activity;
 import com.example.rhythm.myexoplayer;
 import com.example.rhythm.mymusic.mymusic_activity;
-import com.example.rhythm.player_bottom_activity;
 import com.example.rhythm.search.categories_adapter;
 import com.example.rhythm.search.category_model;
 import com.example.rhythm.search.category_view;
@@ -58,6 +55,10 @@ public class home_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext,usernametext;
     String userId;
+    ExoPlayer exoPlayer;
+    TextView songTitle,songSubTitile;
+    ImageView songimg;
+    PlayerView playerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,13 +138,30 @@ public class home_activity extends AppCompatActivity {
 
         });
 
-//        if (savedInstanceState == null) {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            player_bottom_activity playerFragment = new player_bottom_activity();
-//            fragmentTransaction.replace(R.id.player_fragment, playerFragment);
-//            fragmentTransaction.commit();
-//        }
+        songTitle = findViewById(R.id.song_title_text_player_bottom);
+        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
+        songimg = findViewById(R.id.song_cover_image_player_bottom);
+        playerView = findViewById(R.id.player_view_bottom);
+
+
+        song_model currentSong = myexoplayer.currentsong;
+        if (currentSong != null) {
+
+            songTitle.setText(currentSong.getTitle());
+            songSubTitile.setText(currentSong.getSubtitle());
+            Glide.with(songimg).load(currentSong.getCoverurl())
+                    .circleCrop()
+                    .into(songimg);
+
+            exoPlayer = new myexoplayer().getInstance();
+            playerView.showController();
+            playerView.setPlayer(exoPlayer);
+
+
+
+        }
+
+
 
 
         //Bottom navigation

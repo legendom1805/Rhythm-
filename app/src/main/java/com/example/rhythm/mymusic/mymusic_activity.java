@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +21,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.rhythm.R;
 import com.example.rhythm.account_activity;
 import com.example.rhythm.home.home_activity;
 import com.example.rhythm.login_activity;
+import com.example.rhythm.myexoplayer;
 import com.example.rhythm.search.search_activity;
 import com.example.rhythm.search.song_model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -65,6 +70,10 @@ public class mymusic_activity extends AppCompatActivity {
     FirebaseFirestore fstore;
     TextView emailtext, usernametext;
     String userId;
+    ExoPlayer exoPlayer;
+    TextView songTitle,songSubTitile;
+    ImageView songimg;
+    PlayerView playerView;
 
     private FirebaseStorage storage;
     private FirebaseDatabase database;
@@ -129,6 +138,29 @@ public class mymusic_activity extends AppCompatActivity {
 
             return true;
         });
+
+        songTitle = findViewById(R.id.song_title_text_player_bottom);
+        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
+        songimg = findViewById(R.id.song_cover_image_player_bottom);
+        playerView = findViewById(R.id.player_view_bottom);
+
+
+        song_model currentSong = myexoplayer.currentsong;
+        if (currentSong != null) {
+
+            songTitle.setText(currentSong.getTitle());
+            songSubTitile.setText(currentSong.getSubtitle());
+            Glide.with(songimg).load(currentSong.getCoverurl())
+                    .circleCrop()
+                    .into(songimg);
+
+            exoPlayer = new myexoplayer().getInstance();
+            playerView.showController();
+            playerView.setPlayer(exoPlayer);
+
+
+
+        }
 
         // Bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -228,7 +260,8 @@ public class mymusic_activity extends AppCompatActivity {
     private void saveSongMetadata(String title, String subtitle, String url, String coverurl) {
         DatabaseReference dbRef = database.getReference("songs");
         String id = dbRef.push().getKey();
-        song_model song = new song_model(id, title, url, coverurl, subtitle);
+        String lowertitle = texttitle.toLowerCase();
+        song_model song = new song_model(id, title, url, coverurl, subtitle,lowertitle);
         dbRef.child(id).setValue(song)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(mymusic_activity.this, "Song uploaded successfully", Toast.LENGTH_SHORT).show();

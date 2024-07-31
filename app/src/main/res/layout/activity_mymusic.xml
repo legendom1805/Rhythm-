@@ -63,6 +63,16 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
+    <include
+        android:id="@+id/player_fragment"
+        layout="@layout/fragment_player_bottom_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"

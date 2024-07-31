@@ -7,13 +7,15 @@ public class song_model {
     public String subtitle;
     public String url;
     public String coverurl;
+    public String title_lowercase;
 
-    public song_model(String id, String title, String url, String coverurl, String subtitle) {
+    public song_model(String id, String title, String url, String coverurl, String subtitle, String title_lowercase) {
         this.id = id;
         this.title = title;
         this.url = url;
         this.coverurl = coverurl;
         this.subtitle = subtitle;
+        this.title_lowercase = title_lowercase;
     }
 
     public song_model(){}
