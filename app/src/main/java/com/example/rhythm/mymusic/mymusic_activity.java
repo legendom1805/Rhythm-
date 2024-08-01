@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +34,7 @@ import com.example.rhythm.account_activity;
 import com.example.rhythm.home.home_activity;
 import com.example.rhythm.login_activity;
 import com.example.rhythm.myexoplayer;
+import com.example.rhythm.player_activity;
 import com.example.rhythm.search.search_activity;
 import com.example.rhythm.search.song_model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -161,6 +164,15 @@ public class mymusic_activity extends AppCompatActivity {
 
 
         }
+
+        LinearLayout bottomplayer;
+        bottomplayer = findViewById(R.id.player_fragment);
+        bottomplayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mymusic_activity.this, player_activity.class));
+            }
+        });
 
         // Bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);

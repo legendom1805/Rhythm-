@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.example.rhythm.home.home_activity;
 import com.example.rhythm.login_activity;
 import com.example.rhythm.myexoplayer;
 import com.example.rhythm.mymusic.mymusic_activity;
+import com.example.rhythm.player_activity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -165,6 +167,15 @@ public class search_activity extends AppCompatActivity {
             playerView.showController();
             playerView.setPlayer(exoPlayer);
         }
+
+        LinearLayout bottomplayer;
+        bottomplayer = findViewById(R.id.player_fragment);
+        bottomplayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(search_activity.this, player_activity.class));
+            }
+        });
 
         // Bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);

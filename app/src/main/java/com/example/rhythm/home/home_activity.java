@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.example.rhythm.account_activity;
 import com.example.rhythm.login_activity;
 import com.example.rhythm.myexoplayer;
 import com.example.rhythm.mymusic.mymusic_activity;
+import com.example.rhythm.player_activity;
 import com.example.rhythm.search.categories_adapter;
 import com.example.rhythm.search.category_model;
 import com.example.rhythm.search.category_view;
@@ -157,9 +159,17 @@ public class home_activity extends AppCompatActivity {
             playerView.showController();
             playerView.setPlayer(exoPlayer);
 
-
-
         }
+
+        LinearLayout bottomplayer;
+        bottomplayer = findViewById(R.id.player_fragment);
+        bottomplayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(home_activity.this, player_activity.class));
+            }
+        });
+
 
 
 
