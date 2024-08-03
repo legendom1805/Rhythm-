@@ -20,15 +20,7 @@
         tools:openDrawer="start">
 
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigationView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/header_layout"
-            app:itemIconSize="40dp"
-            app:menu="@menu/navigation_drawer_menu" />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -216,6 +208,17 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationViewhome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/header_layout"
+            app:itemIconSize="40dp"
+            app:menu="@menu/navigation_drawer_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
     <include

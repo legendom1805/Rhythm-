@@ -37,6 +37,11 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,7 +62,7 @@ public class search_activity extends AppCompatActivity {
     String userId;
     ExoPlayer exoPlayer;
     TextView songTitle, songSubTitile;
-    ImageView songimg;
+    ImageView songimg,userimg;
     PlayerView playerView;
     SearchView searchView;
     RecyclerView searchResultsRecyclerView;
@@ -113,6 +118,25 @@ public class search_activity extends AppCompatActivity {
             }
         });
 
+        userimg = header.findViewById(R.id.imageView6);
+
+        // Retrieve image URL from Realtime Database and load it into userimg using Glide
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("ProfileImage");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String imageUrl = snapshot.getValue(String.class);
+                    Glide.with(search_activity.this).load(imageUrl).circleCrop().into(userimg);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(search_activity.this, "Failed to load profile image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         ImageButton drawernavtoggle = findViewById(R.id.drawernavtoggle);
@@ -136,9 +160,9 @@ public class search_activity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                if (item.getItemId() == R.id.account) {
+                if (item.getItemId() == R.id.accountnav) {
                     startActivity(new Intent(getApplicationContext(), account_activity.class));
-                } else if (item.getItemId() == R.id.logout) {
+                } else if (item.getItemId() == R.id.logoutnav) {
                     FirebaseAuth.getInstance().signOut();
                     Intent logint = new Intent(search_activity.this, login_activity.class);
                     startActivity(logint);

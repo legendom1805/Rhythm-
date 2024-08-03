@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,7 +23,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +36,6 @@ import com.example.rhythm.player_activity;
 import com.example.rhythm.search.search_activity;
 import com.example.rhythm.search.song_model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,8 +71,8 @@ public class mymusic_activity extends AppCompatActivity {
     TextView emailtext, usernametext;
     String userId;
     ExoPlayer exoPlayer;
-    TextView songTitle,songSubTitile;
-    ImageView songimg;
+    TextView songTitle, songSubTitile;
+    ImageView songimg,userimg;
     PlayerView playerView;
 
     private FirebaseStorage storage;
@@ -116,6 +113,25 @@ public class mymusic_activity extends AppCompatActivity {
             }
         });
 
+        userimg = header.findViewById(R.id.imageView6);
+
+        // Retrieve image URL from Realtime Database and load it into userimg using Glide
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("ProfileImage");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String imageUrl = snapshot.getValue(String.class);
+                    Glide.with(mymusic_activity.this).load(imageUrl).circleCrop().into(userimg);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(mymusic_activity.this, "Failed to load profile image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // Navigation Drawer
         DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -128,9 +144,9 @@ public class mymusic_activity extends AppCompatActivity {
         drawernavtoggle.setOnClickListener(view -> drawerLayout.openDrawer(GravityCompat.START));
 
         navigationView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.account) {
+            if (item.getItemId() == R.id.accountnav) {
                 startActivity(new Intent(getApplicationContext(), account_activity.class));
-            } else if (item.getItemId() == R.id.logout) {
+            } else if (item.getItemId() == R.id.logoutnav) {
                 FirebaseAuth.getInstance().signOut();
                 Intent logint = new Intent(mymusic_activity.this, login_activity.class);
                 startActivity(logint);
@@ -147,10 +163,8 @@ public class mymusic_activity extends AppCompatActivity {
         songimg = findViewById(R.id.song_cover_image_player_bottom);
         playerView = findViewById(R.id.player_view_bottom);
 
-
         song_model currentSong = myexoplayer.currentsong;
         if (currentSong != null) {
-
             songTitle.setText(currentSong.getTitle());
             songSubTitile.setText(currentSong.getSubtitle());
             Glide.with(songimg).load(currentSong.getCoverurl())
@@ -160,19 +174,10 @@ public class mymusic_activity extends AppCompatActivity {
             exoPlayer = new myexoplayer().getInstance();
             playerView.showController();
             playerView.setPlayer(exoPlayer);
-
-
-
         }
 
-        LinearLayout bottomplayer;
-        bottomplayer = findViewById(R.id.player_fragment);
-        bottomplayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mymusic_activity.this, player_activity.class));
-            }
-        });
+        LinearLayout bottomplayer = findViewById(R.id.player_fragment);
+        bottomplayer.setOnClickListener(view -> startActivity(new Intent(mymusic_activity.this, player_activity.class)));
 
         // Bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -189,7 +194,6 @@ public class mymusic_activity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), mymusic_activity.class));
                 return true;
             }
-
             return false;
         });
 
@@ -254,7 +258,7 @@ public class mymusic_activity extends AppCompatActivity {
 
     private void uploadSong() {
         if (songUri != null) {
-            StorageReference storageRef = storage.getReference().child("songs/" + System.currentTimeMillis() + ".mp3");
+            StorageReference storageRef = storage.getReference().child("songs/" + userId + "/" + System.currentTimeMillis() + ".mp3");
             String finalTitle = texttitle;
             String finalArtist = textsubtitle;
             storageRef.putFile(songUri)
@@ -270,10 +274,10 @@ public class mymusic_activity extends AppCompatActivity {
     }
 
     private void saveSongMetadata(String title, String subtitle, String url, String coverurl) {
-        DatabaseReference dbRef = database.getReference("songs");
+        DatabaseReference dbRef = database.getReference("songs").child(userId);
         String id = dbRef.push().getKey();
         String lowertitle = texttitle.toLowerCase();
-        song_model song = new song_model(id, title, url, coverurl, subtitle,lowertitle);
+        song_model song = new song_model(id, title, url, coverurl, subtitle, lowertitle);
         dbRef.child(id).setValue(song)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(mymusic_activity.this, "Song uploaded successfully", Toast.LENGTH_SHORT).show();
@@ -283,7 +287,7 @@ public class mymusic_activity extends AppCompatActivity {
     }
 
     private void fetchSongs() {
-        DatabaseReference dbRef = database.getReference("songs");
+        DatabaseReference dbRef = database.getReference("songs").child(userId);
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -94,7 +94,6 @@ public class account_activity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(account_activity.this, login_activity.class));
-                finish();
             }
         });
         backbtn.setOnClickListener(new View.OnClickListener() {
