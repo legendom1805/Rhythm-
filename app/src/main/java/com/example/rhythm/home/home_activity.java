@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -243,11 +244,13 @@ public class home_activity extends AppCompatActivity {
 
         }
         EventChangeListner();
+        myexoplayer.initializePlayer(this);
         //Section1
          RelativeLayout section1layout = findViewById(R.id.section_1_main_layout);
          TextView sectitle = findViewById(R.id.section1title);
          RecyclerView sectionrecyclerview = findViewById(R.id.section1recyclerview);
          SetUpSection("section_1", section1layout,sectitle,sectionrecyclerview);
+
 
     }
 
@@ -302,4 +305,6 @@ public class home_activity extends AppCompatActivity {
                    }
                });
     }
+
+
 }

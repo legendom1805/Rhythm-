@@ -61,9 +61,9 @@ public class player_activity extends AppCompatActivity {
             playerView.setPlayer(exoPlayer);
             exoPlayer.addListener(playerlistner);
 
-
-
         }
+
+
 
 
     }
