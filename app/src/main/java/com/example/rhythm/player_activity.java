@@ -2,6 +2,7 @@ package com.example.rhythm;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class player_activity extends AppCompatActivity {
     ExoPlayer exoPlayer;
     TextView songTitle,songSubTitile;
     ImageView songimg,playergif;
+    ImageButton backbtn;
     PlayerView playerView;
     Player.Listener playerlistner = new Player.Listener() {
         @Override
@@ -43,6 +45,14 @@ public class player_activity extends AppCompatActivity {
         songimg = findViewById(R.id.song_cover_image_player);
         playerView = findViewById(R.id.player_view);
         playergif = findViewById(R.id.song_cover_gif_player);
+        backbtn = findViewById(R.id.backbutton);
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         song_model currentSong = myexoplayer.currentsong;
         if (currentSong != null) {

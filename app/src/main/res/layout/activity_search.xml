@@ -100,9 +100,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:background="@color/gery"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/header_layout"
             app:itemIconSize="40dp"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
             app:menu="@menu/navigation_drawer_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>

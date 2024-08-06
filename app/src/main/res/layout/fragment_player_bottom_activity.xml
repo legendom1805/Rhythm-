@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
     android:layout_height="wrap_content"
-    android:background="@color/black"
+    android:background="@drawable/bottomplayerbg"
     android:padding="5dp"
     android:orientation="horizontal">
 
@@ -41,11 +42,12 @@
         android:id="@+id/player_view_bottom"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_gravity="end|center_vertical"
         android:layout_marginStart="100dp"
+        android:background="#00FFFFFF"
         android:visibility="visible"
         app:auto_show="true"
         app:hide_on_touch="false"
-        app:show_timeout="0"
-        android:layout_gravity="end|center_vertical" />
+        app:show_timeout="0" />
 
 </LinearLayout>

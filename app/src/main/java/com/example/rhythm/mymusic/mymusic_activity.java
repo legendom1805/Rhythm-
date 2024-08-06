@@ -23,6 +23,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -200,6 +201,7 @@ public class mymusic_activity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         songList = new ArrayList<>();
         songAdapter = new upload_song_recycler_view_adapter(this, songList);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(songAdapter);
 
         fetchSongs();

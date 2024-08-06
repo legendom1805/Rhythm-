@@ -7,13 +7,21 @@
     android:background="@color/black"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
     android:paddingTop="40dp"
     android:paddingBottom="16dp"
     tools:context=".player_activity">
 
+    <ImageButton
+        android:id="@+id/backbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:background="#00FFFFFF"
+        android:paddingStart="20dp"
+        app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
+
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
@@ -51,9 +59,9 @@
         android:id="@+id/song_cover_gif_player"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:visibility="invisible"
+        android:layout_gravity="center_horizontal"
         android:scaleType="fitXY"
-        android:layout_gravity="center" />
+        android:visibility="invisible" />
 
     <androidx.media3.ui.PlayerView
         android:id="@+id/player_view"
