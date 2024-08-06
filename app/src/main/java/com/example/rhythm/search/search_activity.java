@@ -174,23 +174,6 @@ public class search_activity extends AppCompatActivity {
             }
         });
 
-        songTitle = findViewById(R.id.song_title_text_player_bottom);
-        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
-        songimg = findViewById(R.id.song_cover_image_player_bottom);
-        playerView = findViewById(R.id.player_view_bottom);
-
-        song_model currentSong = myexoplayer.currentsong;
-        if (currentSong != null) {
-            songTitle.setText(currentSong.getTitle());
-            songSubTitile.setText(currentSong.getSubtitle());
-            Glide.with(songimg).load(currentSong.getCoverurl())
-                    .circleCrop()
-                    .into(songimg);
-
-            exoPlayer = new myexoplayer().getInstance();
-            playerView.showController();
-            playerView.setPlayer(exoPlayer);
-        }
 
         LinearLayout bottomplayer;
         bottomplayer = findViewById(R.id.player_fragment);
@@ -273,5 +256,37 @@ public class search_activity extends AppCompatActivity {
                         Toast.makeText(search_activity.this, "Error getting documents: " + task.getException(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showPlayerView();
+    }
+
+
+    public void showPlayerView() {
+        LinearLayout playerView = findViewById(R.id.player_fragment);
+        songTitle = findViewById(R.id.song_title_text_player_bottom);
+        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
+        songimg = findViewById(R.id.song_cover_image_player_bottom);
+        PlayerView playerViewbottom = findViewById(R.id.player_view_bottom);
+
+        song_model currentSong = myexoplayer.currentsong;
+        if (currentSong != null) {
+            playerView.setVisibility(View.VISIBLE);
+            songTitle.setText(currentSong.getTitle());
+            songSubTitile.setText(currentSong.getSubtitle());
+            Glide.with(songimg).load(currentSong.getCoverurl())
+                    .circleCrop()
+                    .into(songimg);
+
+            exoPlayer = new myexoplayer().getInstance();
+            playerViewbottom.showController();
+            playerViewbottom.setPlayer(exoPlayer);
+
+        } else {
+            playerView.setVisibility(View.GONE);
+        }
     }
 }

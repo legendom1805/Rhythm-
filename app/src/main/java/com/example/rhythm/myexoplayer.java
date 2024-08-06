@@ -36,14 +36,7 @@ public class myexoplayer {
 
         if (currentsong != song) {
             currentsong = song;
-
-
-            if (currentsong != null) {
-                SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(LAST_SONG_ID, currentsong.getId());
-                editor.apply();
-            }
+            updateCount();
 
 
             if (currentsong != null && currentsong.getUrl() != null) {
@@ -60,40 +53,27 @@ public class myexoplayer {
 
     }
 
-    public static void initializePlayer(Context context) {
-        if (exoPlayer == null)
-            exoPlayer = new ExoPlayer.Builder(context).build();
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        String lastSongId = sharedPreferences.getString(LAST_SONG_ID, null);
-
-        if (lastSongId != null) {
-            // Fetch song metadata from Firebase using the last song ID
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference songRef = db.collection("songs").document(lastSongId);
-            songRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
-                        song_model lastSong = documentSnapshot.toObject(song_model.class);
-                        if (lastSong != null && lastSong.getUrl() != null) {
-                            currentsong = lastSong;
-                            MediaItem mediaItem = MediaItem.fromUri(lastSong.getUrl());
-                            if (exoPlayer != null) {
-                                exoPlayer.setMediaItem(mediaItem);
-                                exoPlayer.prepare();
-                            }
+    public static void updateCount() {
+        if (currentsong != null && currentsong.getId() != null) {
+            String id = currentsong.getId();
+            FirebaseFirestore.getInstance().collection("songs")
+                    .document(id)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Long latestCount = documentSnapshot.getLong("count");
+                        if (latestCount == null) {
+                            latestCount = 1L;
+                        } else {
+                            latestCount = latestCount + 1;
                         }
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("Music","No Song");
-                }
-            });
 
-
+                        FirebaseFirestore.getInstance().collection("songs")
+                                .document(id)
+                                .update("count", latestCount);
+                    });
         }
     }
+
+
 }

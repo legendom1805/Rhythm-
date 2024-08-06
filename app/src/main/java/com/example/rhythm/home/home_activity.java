@@ -67,7 +67,6 @@ public class home_activity extends AppCompatActivity {
     ExoPlayer exoPlayer;
     TextView songTitle,songSubTitile;
     ImageView songimg,userimg;
-    PlayerView playerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,26 +164,7 @@ public class home_activity extends AppCompatActivity {
 
         });
 
-        songTitle = findViewById(R.id.song_title_text_player_bottom);
-        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
-        songimg = findViewById(R.id.song_cover_image_player_bottom);
-        playerView = findViewById(R.id.player_view_bottom);
 
-
-        song_model currentSong = myexoplayer.currentsong;
-        if (currentSong != null) {
-
-            songTitle.setText(currentSong.getTitle());
-            songSubTitile.setText(currentSong.getSubtitle());
-            Glide.with(songimg).load(currentSong.getCoverurl())
-                    .circleCrop()
-                    .into(songimg);
-
-            exoPlayer = new myexoplayer().getInstance();
-            playerView.showController();
-            playerView.setPlayer(exoPlayer);
-
-        }
 
         LinearLayout bottomplayer;
         bottomplayer = findViewById(R.id.player_fragment);
@@ -244,7 +224,6 @@ public class home_activity extends AppCompatActivity {
 
         }
         EventChangeListner();
-        myexoplayer.initializePlayer(this);
         //Section1
          RelativeLayout section1layout = findViewById(R.id.section_1_main_layout);
          TextView sectitle = findViewById(R.id.section1title);
@@ -252,7 +231,11 @@ public class home_activity extends AppCompatActivity {
          SetUpSection("section_1", section1layout,sectitle,sectionrecyclerview);
 
 
+
+
     }
+
+
 
     private void EventChangeListner() {
 
@@ -304,6 +287,38 @@ public class home_activity extends AppCompatActivity {
                        }
                    }
                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showPlayerView();
+    }
+
+
+    public void showPlayerView() {
+        LinearLayout playerView = findViewById(R.id.player_fragment);
+        songTitle = findViewById(R.id.song_title_text_player_bottom);
+        songSubTitile = findViewById(R.id.song_subtitle_text_player_bottom);
+        songimg = findViewById(R.id.song_cover_image_player_bottom);
+        PlayerView playerViewbottom = findViewById(R.id.player_view_bottom);
+
+        song_model currentSong = myexoplayer.currentsong;
+        if (currentSong != null) {
+            playerView.setVisibility(View.VISIBLE);
+            songTitle.setText(currentSong.getTitle());
+            songSubTitile.setText(currentSong.getSubtitle());
+            Glide.with(songimg).load(currentSong.getCoverurl())
+                    .circleCrop()
+                    .into(songimg);
+
+            exoPlayer = new myexoplayer().getInstance();
+            playerViewbottom.showController();
+            playerViewbottom.setPlayer(exoPlayer);
+
+        } else {
+            playerView.setVisibility(View.GONE);
+        }
     }
 
 
