@@ -52,9 +52,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="250dp"
+                android:layout_height="20dp"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/uploadButton"
+                app:layout_constraintStart_toStartOf="@+id/uploadButton"
+                app:layout_constraintTop_toBottomOf="@+id/uploadButton"
+                app:layout_constraintVertical_bias="0.168" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="match_parent"

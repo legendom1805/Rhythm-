@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,7 +75,7 @@ public class mymusic_activity extends AppCompatActivity {
     ExoPlayer exoPlayer;
     TextView songTitle, songSubTitile;
     ImageView songimg,userimg;
-    PlayerView playerView;
+    private ProgressBar uploadProgressBar;
 
     private FirebaseStorage storage;
     private FirebaseDatabase database;
@@ -93,9 +94,9 @@ public class mymusic_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mymusic);
+        uploadProgressBar = findViewById(R.id.progressBar);
 
         NavigationView navigationView = findViewById(R.id.navigationView);
-
         View header = navigationView.getHeaderView(0);
         auth = FirebaseAuth.getInstance();
         fstore = FirebaseFirestore.getInstance();
@@ -246,13 +247,19 @@ public class mymusic_activity extends AppCompatActivity {
             StorageReference storageRef = storage.getReference().child("songs/" + userId + "/" + System.currentTimeMillis() + ".mp3");
             String finalTitle = texttitle;
             String finalArtist = textsubtitle;
+            uploadProgressBar.setVisibility(View.VISIBLE);
             storageRef.putFile(songUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String songUrl = uri.toString();
                         String songcover = "https://firebasestorage.googleapis.com/v0/b/rhythm-80f02.appspot.com/o/sectionimg%2Fvecteezy_music-party-disco-flyer-with-exceptional-glow-of-lights_.jpg?alt=media&token=dc24e5bc-1c4d-4034-842b-dce44de7762d";
                         saveSongMetadata(finalTitle, finalArtist, songUrl, songcover);
+                        uploadProgressBar.setVisibility(View.GONE);
                     }))
-                    .addOnFailureListener(e -> Toast.makeText(mymusic_activity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {Toast.makeText(mymusic_activity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();})
+                    .addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        uploadProgressBar.setProgress((int) progress);
+                    });
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
