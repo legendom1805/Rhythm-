@@ -53,6 +53,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -229,6 +230,12 @@ public class home_activity extends AppCompatActivity {
          TextView sectitle = findViewById(R.id.section1title);
          RecyclerView sectionrecyclerview = findViewById(R.id.section1recyclerview);
          SetUpSection("section_1", section1layout,sectitle,sectionrecyclerview);
+         //section2
+         RelativeLayout mostlyplayedlayout = findViewById(R.id.mostly_played_main_layout);
+         TextView mostlyplayedtitle = findViewById(R.id.mostly_played_title);
+         RecyclerView mostlyplayedrecyclerview = findViewById(R.id.mostly_played_recyclerview);
+         setupmostlyplayed("mostly_played", mostlyplayedlayout,mostlyplayedtitle,mostlyplayedrecyclerview);
+
 
 
 
@@ -287,6 +294,36 @@ public class home_activity extends AppCompatActivity {
                        }
                    }
                });
+    }
+    public void setupmostlyplayed(String id, RelativeLayout mainLayout, TextView titleView, RecyclerView recyclerView) {
+        FirebaseFirestore.getInstance().collection("sections")
+                .document(id)
+                .get().addOnSuccessListener(documentSnapshot -> {
+                    // Get most played songs
+                    FirebaseFirestore.getInstance().collection("songs")
+                            .orderBy("count", Query.Direction.DESCENDING)
+                            .limit(5)
+                            .get().addOnSuccessListener(songListSnapshot -> {
+                                List<song_model> songsModelList = songListSnapshot.toObjects(song_model.class);
+                                List<String> songsIdList = new ArrayList<>();
+                                for (song_model song : songsModelList) {
+                                    songsIdList.add(song.getId());
+                                }
+                                category_model section = documentSnapshot.toObject(category_model.class);
+                                if (section != null) {
+                                    section.setSongs(songsIdList);
+                                    mainLayout.setVisibility(View.VISIBLE);
+                                    titleView.setText(section.getName());
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                                    recyclerView.setAdapter(new sectionsonglistadapter(home_activity.this,section.getSongs()));
+                                    mainLayout.setOnClickListener(view -> {
+                                        Intent intent = new Intent(home_activity.this, category_view.class);
+                                        intent.putExtra("category_model",section);
+                                        startActivity(intent);
+                                    });
+                                }
+                            });
+                });
     }
 
     @Override
